@@ -1,0 +1,15 @@
+name: touring-api
+scripts:
+  # Development
+  server: cd touring && python manage.py runserver
+
+  makemigrations: cd touring && python manage.py makemigrations
+
+  migrate: cd touring && python manage.py migrate
+
+  createsuperuser: cd touring && python manage.py createsuperuser
+
+  requirements: poetry export -f requirements.txt --without-hashes --with dev --output requirements.txt
+
+  # Commands
+  seed_tours: cd touring && python manage.py seed_tours
