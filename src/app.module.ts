@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
 
+import { AppConfigModule } from './app-config/app-config.module';
+import { envSchema } from './app-config/env.schema';
 import { DbModule } from './db/db.module';
 import { ToursModule } from './tours/tours.module';
 
@@ -9,19 +10,11 @@ import { ToursModule } from './tours/tours.module';
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            cache: true,
-            validationSchema: Joi.object({
-                NODE_ENV: Joi.string()
-                    .required()
-                    .valid('development', 'production')
-                    .default('development'),
-                PORT: Joi.number().required().default(3000),
-                DATABASE_URL: Joi.string().required(),
-                DATABASE_AUTH_TOKEN: Joi.string().required(),
-            }),
+            validate: (env) => envSchema.parse(env),
         }),
         ToursModule,
         DbModule,
+        AppConfigModule,
     ],
     controllers: [],
     providers: [],

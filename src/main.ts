@@ -4,13 +4,13 @@ import {
     ValidationPipe,
     VersioningType,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
+import { AppConfigService } from './app-config/app-config.service';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    const configService = app.get(ConfigService);
+    const configService = app.get(AppConfigService);
 
     app.setGlobalPrefix('api', {
         exclude: [{ path: 'health', method: RequestMethod.GET }],
@@ -30,7 +30,7 @@ async function bootstrap() {
 
     app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-    await app.listen(configService.get<number>('PORT')!);
+    await app.listen(configService.get('PORT'));
 }
 
 void bootstrap();
