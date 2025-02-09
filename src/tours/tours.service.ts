@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable, NotFoundException } from '@nes
 import { avg, count, desc, eq, max, min, sql, sum } from 'drizzle-orm';
 import slugify from 'slugify';
 
-import { DrizzleAsyncProvider, DrizzleDB } from 'src/db/db.module';
+import { DrizzleDB } from 'src/db/db.module';
 import { startDates, tours } from 'src/db/schemas';
 import { CreateTourDto } from './dtos/tour-create-dto';
 import { TourListDto } from './dtos/tour-list-dto';
@@ -11,7 +11,7 @@ import { TourEntity } from './entities/tour-entity';
 
 @Injectable()
 export class ToursService {
-    constructor(@Inject(DrizzleAsyncProvider) private db: DrizzleDB) {}
+    constructor(@Inject('DrizzleAsyncProvider') private db: DrizzleDB) {}
 
     private async findTourById(id: string) {
         const result = await this.db.query.tours.findFirst({

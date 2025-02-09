@@ -3,17 +3,18 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { drizzle, LibSQLDatabase } from 'drizzle-orm/libsql';
 
+import { HealthIndicatorService, TerminusModule } from '@nestjs/terminus';
 import { AppConfigService } from 'src/app-config/app-config.service';
+import { DBHealthIndicator } from './db.health';
 import * as schema from './schemas';
-
-export const DrizzleAsyncProvider = Symbol('DrizzleAsyncProvider');
 
 export type DrizzleDB = LibSQLDatabase<typeof schema>;
 
 @Module({
+    imports: [TerminusModule],
     providers: [
         {
-            provide: DrizzleAsyncProvider,
+            provide: 'DrizzleAsyncProvider',
             inject: [ConfigService],
             useFactory: (configService: AppConfigService) => {
                 const client = createClient({
@@ -24,7 +25,9 @@ export type DrizzleDB = LibSQLDatabase<typeof schema>;
                 return drizzle({ client, schema, logger: true });
             },
         },
+        HealthIndicatorService,
+        DBHealthIndicator,
     ],
-    exports: [DrizzleAsyncProvider],
+    exports: ['DrizzleAsyncProvider', DBHealthIndicator],
 })
 export class DbModule {}

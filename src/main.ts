@@ -5,6 +5,7 @@ import {
     VersioningType,
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
+
 import { AppConfigService } from './app-config/app-config.service';
 import { AppModule } from './app.module';
 
@@ -13,7 +14,10 @@ async function bootstrap() {
     const configService = app.get(AppConfigService);
 
     app.setGlobalPrefix('api', {
-        exclude: [{ path: 'health', method: RequestMethod.GET }],
+        exclude: [
+            { path: 'health', method: RequestMethod.ALL },
+            { path: 'health/*path', method: RequestMethod.ALL },
+        ],
     });
 
     app.enableVersioning({

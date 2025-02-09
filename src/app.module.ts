@@ -5,6 +5,7 @@ import { AppConfigModule } from './app-config/app-config.module';
 import { envSchema } from './app-config/env.schema';
 import { DbModule } from './db/db.module';
 import { ToursModule } from './tours/tours.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
     imports: [
@@ -12,9 +13,10 @@ import { ToursModule } from './tours/tours.module';
             isGlobal: true,
             validate: (env) => envSchema.parse(env),
         }),
+        AppConfigModule,
         ToursModule,
         DbModule,
-        AppConfigModule,
+        HealthModule,
     ],
     controllers: [],
     providers: [],
